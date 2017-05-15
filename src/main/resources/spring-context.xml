@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="bizGroup" class="io.netty.util.concurrent.DefaultEventExecutorGroup">
+        <constructor-arg name="nThreads" value="3"/>
+    </bean>
+
+    <bean id="channelsHolder" class="com.hantang.chat.handler.ChannelsHolder">
+        <property name="bizGroup" ref="bizGroup"/>
+    </bean>
+
+    <bean id="loginHandler" class="com.hantang.chat.handler.LoginChannelHandler">
+        <property name="channelsHolder" ref="channelsHolder"/>
+    </bean>
+
+    <bean id="chatHandler" class="com.hantang.chat.handler.ChatChannelHandler">
+        <property name="channelsHolder" ref="channelsHolder"/>
+    </bean>
+
+    <bean id="nettyNioServer" class="com.hantang.chat.server.NettyNioChatServer">
+        <property name="bizGroup" ref="bizGroup"/>
+        <property name="chatHandler" ref="chatHandler"/>
+        <property name="loginHandler" ref="loginHandler"/>
+    </bean>
+
+</beans>
